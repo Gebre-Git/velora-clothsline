@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import OrderModal from '../components/OrderModal';
-import { type Order, OrderStatus } from '../types';
+import ReviewForm from '../components/ReviewForm';
+import ReviewCard from '../components/ReviewCard';
+import { type Order, OrderStatus, type Review } from '../types';
 
 interface ClientPageProps {
   addOrder: (orderData: Omit<Order, 'id' | 'status' | 'userEmail' | 'createdAt'>) => string;
   getOrderById: (orderId: string) => Order | undefined;
+  reviews: Review[];
+  addReview: (reviewData: Omit<Review, 'id' | 'createdAt'>) => void;
 }
 
 // Helper component for section titles
@@ -61,7 +65,7 @@ const TestimonialCard: React.FC<{ quote: string; author: string; delay: string }
     </div>
 );
 
-const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById }) => {
+const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews, addReview }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submittedOrderId, setSubmittedOrderId] = useState<string | null>(null);
   const [orderStatus, setOrderStatus] = useState<OrderStatus | null>(null);
@@ -224,9 +228,32 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById }) => {
               </div>
           </div>
       </div>
+
+      {/* Reviews Section */}
+      <div className="py-16 md:py-24 bg-velora-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionTitle>Share Your Experience</SectionTitle>
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            <div className="opacity-0" data-animation="animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
+                <h3 className="text-2xl font-bold text-velora-dark mb-6">Leave a Review</h3>
+                <ReviewForm onSubmit={addReview} />
+            </div>
+            <div className="opacity-0" data-animation="animate-slide-in-right" style={{ animationDelay: '0.4s' }}>
+                <h3 className="text-2xl font-bold text-velora-dark mb-6">Recent Reviews</h3>
+                <div className="space-y-6 max-h-[600px] overflow-y-auto pr-4">
+                    {reviews.length > 0 ? (
+                        reviews.map((review) => <ReviewCard key={review.id} review={review} />)
+                    ) : (
+                        <p className="text-gray-500">No reviews yet. Be the first to share your thoughts!</p>
+                    )}
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
       
       {/* Tech Specs Section */}
-      <div className="py-16 md:py-24 bg-velora-white">
+      <div className="py-16 md:py-24">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <SectionTitle>Technical Specifications</SectionTitle>
               <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden opacity-0" data-animation="animate-fade-in-up" style={{animationDelay: '0.2s'}}>

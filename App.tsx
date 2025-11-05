@@ -6,7 +6,7 @@ import GuidelinesPage from './pages/GuidelinesPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
-import { type Order, OrderStatus } from './types';
+import { type Order, OrderStatus, type Review } from './types';
 
 // Mock initial data for demonstration
 const initialOrders: Order[] = [
@@ -30,8 +30,26 @@ const initialOrders: Order[] = [
   },
 ];
 
+const initialReviews: Review[] = [
+    {
+        id: 'rev-1',
+        name: 'Alex Johnson',
+        rating: 5,
+        comment: 'This is the best clothesline I have ever owned. The retractable feature is a lifesaver for my small balcony. Super sturdy and looks great!',
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
+    },
+    {
+        id: 'rev-2',
+        name: 'Maria Garcia',
+        rating: 4,
+        comment: 'Great product! Installation was straightforward. My only wish is that it came in more colors. Otherwise, it works perfectly.',
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
+    }
+]
+
 function App() {
   const [orders, setOrders] = useState<Order[]>(initialOrders);
+  const [reviews, setReviews] = useState<Review[]>(initialReviews);
 
   const addOrder = useCallback((newOrderData: Omit<Order, 'id' | 'status' | 'userEmail' | 'createdAt'>) => {
     const newOrder: Order = {
@@ -57,6 +75,15 @@ function App() {
     return orders.find(order => order.id === orderId);
   }, [orders]);
 
+  const addReview = useCallback((newReviewData: Omit<Review, 'id' | 'createdAt'>) => {
+    const newReview: Review = {
+        ...newReviewData,
+        id: `rev-${Math.random().toString(36).substr(2, 7)}`,
+        createdAt: new Date(),
+    };
+    setReviews(prevReviews => [newReview, ...prevReviews]);
+  }, []);
+
 
   return (
     <HashRouter>
@@ -67,7 +94,7 @@ function App() {
           <Routes>
             <Route path="/admin" element={<AdminPage orders={orders} updateOrderStatus={updateOrderStatus} />} />
             <Route path="/guidelines" element={<GuidelinesPage />} />
-            <Route path="/" element={<ClientPage addOrder={addOrder} getOrderById={getOrderById} />} />
+            <Route path="/" element={<ClientPage addOrder={addOrder} getOrderById={getOrderById} reviews={reviews} addReview={addReview} />} />
           </Routes>
         </main>
         <Footer />

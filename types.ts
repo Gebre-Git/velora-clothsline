@@ -1,8 +1,7 @@
-
 export enum OrderStatus {
-  PENDING = 'Pending',
-  CONFIRMED = 'Confirmed',
-  REJECTED = 'Rejected',
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  REJECTED = 'REJECTED',
 }
 
 export interface Order {
@@ -10,7 +9,15 @@ export interface Order {
   quantity: number;
   phoneNumber: string;
   color: string;
-  userEmail: string; // This would typically come from an auth session
+  userEmail: string;
   status: OrderStatus;
+  createdAt: Date;
+}
+
+export interface Review {
+  id: string;
+  name: string;
+  rating: number;
+  comment: string;
   createdAt: Date;
 }
