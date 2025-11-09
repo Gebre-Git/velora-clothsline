@@ -4,6 +4,12 @@ export enum OrderStatus {
   REJECTED = 'REJECTED',
 }
 
+export enum ReviewStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
+
 export interface Order {
   id: string;
   quantity: number;
@@ -19,5 +25,6 @@ export interface Review {
   name: string;
   rating: number;
   comment: string;
+  status: ReviewStatus;
   createdAt: Date;
 }
