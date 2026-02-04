@@ -224,9 +224,9 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <SectionTitle>What Our Customers Say</SectionTitle>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <TestimonialCard quote="Absolutely love my VELORA! It's so discreet and holds a surprising amount of laundry. My balcony has never looked better." author="Sarah J." delay="0.2s" />
-                  <TestimonialCard quote="The installation was a breeze. The quality is top-notch, far better than any other clothesline I've used. Highly recommend." author="Mike R." delay="0.4s" />
-                  <TestimonialCard quote="A game-changer for our small apartment. We get our laundry dried without sacrificing our living space. Brilliant design!" author="Emily & Tom" delay="0.6s" />
+                  <TestimonialCard quote="What impressed me most about Velora? They deliver true luxury-quality clothing that feels premium in every detail, yet at prices that feel almost free. And once you hang their pieces in your closet, they blend so seamlessly—you barely even notice them." author="Sarah J." delay="0.2s" />
+                  <TestimonialCard quote="The installation was a breeze. The quality is top-notch, far better than any other clothesline I've used. Highly recommend." author="Megersa R." delay="0.4s" />
+                  <TestimonialCard quote="A game-changer for our small apartment. We get our laundry dried without sacrificing our living space. Brilliant design!" author="Tekle M." delay="0.6s" />
               </div>
           </div>
       </div>
@@ -271,27 +271,6 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews
               </div>
           </div>
       </div>
-
-
-       {/* Gallery Section */}
-      <div className="py-16 md:py-24 bg-velora-dark text-velora-light">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-               <SectionTitle>See It in Action</SectionTitle>
-               <p className="mt-4 text-lg text-gray-300 max-w-3xl mx-auto text-center -mt-12 mb-16 opacity-0" data-animation="animate-fade-in-up" style={{animationDelay: '0.2s'}}>From balconies to laundry rooms, see how VELORA™ seamlessly integrates into any home.</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  <div className="opacity-0" data-animation="animate-fade-in-up" style={{animationDelay: '0.2s'}}>
-                    <img src="https://i.imgur.com/8xLqT98.jpeg" alt="Clothes drying on VELORA" className="rounded-lg shadow-lg aspect-square object-cover" />
-                  </div>
-                  <div className="opacity-0" data-animation="animate-fade-in-up" style={{animationDelay: '0.4s'}}>
-                    <img src="https://i.imgur.com/bW3YqjB.jpeg" alt="VELORA fully extended" className="rounded-lg shadow-lg aspect-square object-cover" />
-                  </div>
-                  <div className="opacity-0" data-animation="animate-fade-in-up" style={{animationDelay: '0.6s'}}>
-                     <img src="https://i.imgur.com/gB8sZzJ.jpeg" alt="VELORA retracted" className="rounded-lg shadow-lg aspect-square object-cover" />
-                  </div>
-              </div>
-          </div>
-      </div>
-
 
       <OrderModal
         isOpen={isModalOpen}
