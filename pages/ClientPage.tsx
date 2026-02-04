@@ -224,7 +224,7 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <SectionTitle>What Our Customers Say</SectionTitle>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <TestimonialCard quote="What impressed me most about Velora? They deliver true luxury-quality clothing that feels premium in every detail, yet at prices that feel almost free. And once you hang their pieces in your closet, they blend so seamlessly—you barely even notice them." author="Sarah J." delay="0.2s" />
+                  <TestimonialCard quote="What impressed me about Velora? They offer luxury clothing at prices so low it feels almost free. Once hung in your closet, it’s barely even noticeable." author="Sarah J." delay="0.2s" />
                   <TestimonialCard quote="The installation was a breeze. The quality is top-notch, far better than any other clothesline I've used. Highly recommend." author="Megersa R." delay="0.4s" />
                   <TestimonialCard quote="A game-changer for our small apartment. We get our laundry dried without sacrificing our living space. Brilliant design!" author="Tekle M." delay="0.6s" />
               </div>
