@@ -3,6 +3,7 @@ import OrderModal from '../components/OrderModal';
 import ReviewForm from '../components/ReviewForm';
 import ReviewCard from '../components/ReviewCard';
 import { type Order, OrderStatus, type Review, ReviewStatus } from '../types';
+import { IMAGES } from '../constants/images';
 
 interface ClientPageProps {
   addOrder: (orderData: Omit<Order, 'id' | 'status' | 'userEmail' | 'createdAt'>) => string;
@@ -175,7 +176,7 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews
             <SectionTitle>The Ultimate Space-Saving Solution</SectionTitle>
             <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div className="opacity-0" data-animation="animate-slide-in-left">
-                    <img src="https://i.imgur.com/bW3YqjB.jpeg" alt="VELORA Retractable Clothesline in use" className="rounded-2xl shadow-2xl w-full" />
+                    <img src={IMAGES.HERO_USE} alt="VELORA Retractable Clothesline in use" className="rounded-2xl shadow-2xl w-full" />
                 </div>
                 <div className="space-y-8">
                    <Feature icon={<CheckIcon/>} title="Generous Drying Space" animation="animate-slide-in-right" delay="0s">Our models offer up to 20 meters of line length, perfect for families of any size.</Feature>
