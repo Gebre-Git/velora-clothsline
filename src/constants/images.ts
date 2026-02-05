@@ -1,8 +1,8 @@
 import clothline from '../assets/clothline.jpg';
-import clothline3 from '../assets/clothline 3.jpg';
-import stepOne from '../assets/step one.jpg';
-import stepTwo from '../assets/step two.jpg';
-import stepThree from '../assets/step three.jpg';
+import clothline3 from '../assets/clothline3.png';
+import stepOne from '../assets/stepOne.png';
+import stepTwo from '../assets/stepTwo.png';
+import stepThree from '../assets/stepThree.png';
 
 export const IMAGES: {
   Ulitimate_use: string;
