@@ -22,7 +22,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 }
 
 // Helper component for feature items
-const Feature: React.FC<{ icon: React.ReactElement; title: string; children: React.ReactNode, animation: string, delay: string }> = ({ icon, title, children, animation, delay }) => (
+const Feature: React.FC<{ icon: React.ReactElement<{ className?: string }>; title: string; children: React.ReactNode; animation: string; delay: string }> = ({ icon, title, children, animation, delay }) => (
     <div className="flex opacity-0" data-animation={animation} style={{ animationDelay: delay }}>
         <div className="flex-shrink-0 mr-4">{icon}</div>
         <div>

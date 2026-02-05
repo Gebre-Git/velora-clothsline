@@ -1,7 +1,7 @@
 import React from 'react';
-import AdminOrderCard from '../components/AdminOrderCard';
-import AdminReviewCard from '../components/AdminReviewCard';
-import { type Order, OrderStatus, type Review, ReviewStatus } from '../types';
+import AdminOrderCard from '../../components/AdminOrderCard';
+import AdminReviewCard from '../../components/AdminReviewCard';
+import { type Order, OrderStatus, type Review, ReviewStatus } from '../../types';
 
 interface AdminPageProps {
   orders: Order[];
