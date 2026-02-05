@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import ClientPage from './pages/ClientPage';
-import AdminPage from './pages/AdminPage';
-import GuidelinesPage from './pages/GuidelinesPage';
+import ClientPage from './src/pages/ClientPage';
+import AdminPage from './src/pages/AdminPage';
+import GuidelinesPage from './src/pages/GuidelinesPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';

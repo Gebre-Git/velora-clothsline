@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import OrderModal from '../components/OrderModal';
-import ReviewForm from '../components/ReviewForm';
-import ReviewCard from '../components/ReviewCard';
-import { type Order, OrderStatus, type Review, ReviewStatus } from '../types';
+import OrderModal from '../../components/OrderModal';
+import ReviewForm from '../../components/ReviewForm';
+import ReviewCard from '../../components/ReviewCard';
+import { type Order, OrderStatus, type Review, ReviewStatus } from '../../types';
 import { IMAGES } from '../constants/images';
 
 interface ClientPageProps {
@@ -13,11 +13,13 @@ interface ClientPageProps {
 }
 
 // Helper component for section titles
-const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
     <div className="text-center mb-16 opacity-0" data-animation="animate-fade-in-up">
-        <h2 className="text-4xl font-extrabold text-velora-dark">{children}</h2>
+      <h2 className="text-4xl font-extrabold text-velora-dark">{children}</h2>
     </div>
-);
+  );
+}
 
 // Helper component for feature items
 const Feature: React.FC<{ icon: React.ReactElement; title: string; children: React.ReactNode, animation: string, delay: string }> = ({ icon, title, children, animation, delay }) => (
