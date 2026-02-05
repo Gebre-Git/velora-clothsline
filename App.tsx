@@ -1,9 +1,11 @@
-import React, { useState, useCallback } from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import React, { useState, useCallback, useEffect } from 'react';
+import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import ClientPage from './src/pages/ClientPage';
 import AdminPage from './src/pages/AdminPage';
 import GuidelinesPage from './src/pages/GuidelinesPage';
+import AdminLogin from './src/pages/AdminLogin';
 import Header from './components/Header';
+import ProtectedRoute from './components/ProtectedRoute';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import { type Order, OrderStatus, type Review, ReviewStatus } from './types';
@@ -52,6 +54,16 @@ const initialReviews: Review[] = [
 function App() {
   const [orders, setOrders] = useState<Order[]>(initialOrders);
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
+  const allowedAdminEmails = ['gebre2024mail@gmail.com', 'gebreone777@gmail.com'];
+
+  const [isAdmin, setIsAdmin] = useState<boolean>(() => {
+    try {
+      const email = localStorage.getItem('velora_admin_email');
+      return email !== null && allowedAdminEmails.includes(email);
+    } catch {
+      return false;
+    }
+  });
 
   const addOrder = useCallback((newOrderData: Omit<Order, 'id' | 'status' | 'userEmail' | 'createdAt'>) => {
     const newOrder: Order = {
@@ -95,15 +107,34 @@ function App() {
     );
   }, []);
 
+  const handleLogin = useCallback((email: string) => {
+    if (allowedAdminEmails.includes(email)) {
+      localStorage.setItem('velora_admin_email', email);
+      setIsAdmin(true);
+      return true;
+    }
+    return false;
+  }, []);
+
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem('velora_admin_email');
+    setIsAdmin(false);
+  }, []);
+
 
   return (
     <HashRouter>
       <div className="bg-velora-light min-h-screen font-sans text-velora-text relative cursor-none">
         <CustomCursor />
-        <Header />
+        <Header isAdmin={isAdmin} onLogout={handleLogout} />
         <main>
           <Routes>
-            <Route path="/admin" element={<AdminPage orders={orders} updateOrderStatus={updateOrderStatus} reviews={reviews} updateReviewStatus={updateReviewStatus} />} />
+            <Route path="/admin" element={
+              <ProtectedRoute isAdmin={isAdmin}>
+                <AdminPage orders={orders} updateOrderStatus={updateOrderStatus} reviews={reviews} updateReviewStatus={updateReviewStatus} />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/login" element={<AdminLogin onLogin={handleLogin} />} />
             <Route path="/guidelines" element={<GuidelinesPage />} />
             <Route path="/" element={<ClientPage addOrder={addOrder} getOrderById={getOrderById} reviews={reviews} addReview={addReview} />} />
           </Routes>

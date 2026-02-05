@@ -11,18 +11,63 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, onSubmit }) =>
   const [quantity, setQuantity] = useState(1);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [color, setColor] = useState('White');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
   const [error, setError] = useState('');
 
   if (!isOpen) return null;
   
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmitOrder = async (e: FormEvent) => {
     e.preventDefault();
     if (!phoneNumber.match(/^[0-9-+\s()]*$/) || phoneNumber.length < 7) {
-        setError('Please enter a valid phone number.');
-        return;
+      setError('Please enter a valid phone number.');
+      return;
+    }
+    if (!name || !email || !address) {
+      setError('Please fill in name, email and address.');
+      return;
     }
     setError('');
-    onSubmit({ quantity, phoneNumber, color });
+
+    const payload = {
+      customerName: name,
+      email,
+      address,
+      phoneNumber,
+      items: [
+        {
+          color,
+          quantity,
+        },
+      ],
+    };
+
+    try {
+      const res = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.status === 201) {
+        alert('Order Placed Successfully!');
+        // clear form
+        setQuantity(1);
+        setPhoneNumber('');
+        setColor('White');
+        setName('');
+        setEmail('');
+        setAddress('');
+        setError('');
+        onSubmit({ quantity, phoneNumber, color });
+      } else {
+        const err = await res.json().catch(() => ({}));
+        setError(err.message || 'Failed to place order.');
+      }
+    } catch (err) {
+      setError('Network error: could not reach server.');
+    }
   };
 
   return (
@@ -30,7 +75,38 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, onSubmit }) =>
       <div className="bg-velora-white rounded-lg shadow-xl p-8 w-full max-w-md m-4 relative animate-fade-in-up" onClick={e => e.stopPropagation()}>
         <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl" aria-label="Close modal">&times;</button>
         <h2 className="text-3xl font-bold text-velora-dark mb-6 text-center">Place Your Order</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmitOrder} className="space-y-6">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
+            <input
+              id="name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
+            <input
+              id="address"
+              value={address}
+              onChange={e => setAddress(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
           <div>
             <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">Quantity</label>
             <input
@@ -69,6 +145,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, onSubmit }) =>
             </select>
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
+          <p className="text-xs text-gray-500">Note: Ensure your backend allows CORS (app.use(cors())) so the frontend can talk to it.</p>
           <button
             type="submit"
             className="w-full bg-velora-green hover:bg-velora-dark text-white font-bold py-3 px-4 rounded-lg transition-transform duration-300 transform hover:scale-105"

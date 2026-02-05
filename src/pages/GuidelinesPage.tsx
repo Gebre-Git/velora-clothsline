@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { IMAGES } from '../constants/images';
+import instructionPdf from '../assets/instruction.pdf';
 
 const GuidelineSection: React.FC<{ title: string; children: React.ReactNode; animationDelay?: string; className?: string }> = ({ title, children, animationDelay = '0.2s', className = '' }) => (
     <section className={`mb-16 opacity-0 ${className}`} data-animation="animate-fade-in-up" style={{ animationDelay }}>
@@ -58,6 +59,11 @@ const GuidelinesPage: React.FC = () => {
                     <p className="mt-4 text-xl text-gray-300 max-w-3xl mx-auto opacity-0 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                         Get the most out of your retractable clothesline. Follow these simple steps for safe and efficient use.
                     </p>
+                    <div className="mt-6 opacity-0 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                        <a href={instructionPdf} download aria-label="Download guideline PDF" className="inline-block bg-velora-green text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90">
+                            Download the guideline (PDF)
+                        </a>
+                    </div>
                 </div>
             </div>
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const Header: React.FC = () => {
+const Header: React.FC<{ isAdmin?: boolean; onLogout?: () => void }> = ({ isAdmin = false, onLogout }) => {
   const activeLinkStyle = {
     color: '#005d5a',
     fontWeight: '600',
@@ -37,13 +37,18 @@ const Header: React.FC = () => {
             >
               Guidelines
             </NavLink>
-            <NavLink
-              to="/admin"
-              style={({ isActive }) => isActive ? activeLinkStyle : undefined}
-              className="hover:text-velora-green transition-colors duration-200"
-            >
-              Admin Panel
-            </NavLink>
+            {isAdmin && (
+              <NavLink
+                to="/admin"
+                style={({ isActive }) => isActive ? activeLinkStyle : undefined}
+                className="hover:text-velora-green transition-colors duration-200"
+              >
+                Admin Panel
+              </NavLink>
+            )}
+            {isAdmin && onLogout && (
+              <button onClick={onLogout} className="text-sm text-red-600 hover:underline">Logout</button>
+            )}
           </nav>
         </div>
       </div>
