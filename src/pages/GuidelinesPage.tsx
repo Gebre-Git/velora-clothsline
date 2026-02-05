@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { IMAGES } from '../constants/images';
 
 const GuidelineSection: React.FC<{ title: string; children: React.ReactNode; animationDelay?: string; className?: string }> = ({ title, children, animationDelay = '0.2s', className = '' }) => (
     <section className={`mb-16 opacity-0 ${className}`} data-animation="animate-fade-in-up" style={{ animationDelay }}>
@@ -87,18 +88,18 @@ const GuidelinesPage: React.FC = () => {
                     </div>
                 </GuidelineSection>
 
-                <StepWithImage imageSrc="https://i.imgur.com/bW3YqjB.jpeg" alt="Extending the clothesline away from the unit." title="1. Extending & Locking the Lines">
+                <StepWithImage imageSrc={IMAGES.step_one} alt="Extending the clothesline away from the unit." title="1. Extending & Locking the Lines">
                    <p className="mb-2">Firmly grip the central bar and pull it horizontally away from the housing unit towards the mounting hooks on the opposite wall.</p>
                    <p className="mb-2">Once you reach the hooks, securely loop the bar onto them.</p>
                    <p>Engage the tension lock on the side of the main unit by turning it clockwise until firm. This prevents the lines from sagging and makes them ready for laundry.</p>
                 </StepWithImage>
 
-                <StepWithImage imageSrc="https://i.imgur.com/8xLqT98.jpeg" alt="Laundry hanging evenly on the clothesline." title="2. Loading Your Laundry" reverse={true}>
+                <StepWithImage imageSrc={IMAGES.step_two} alt="Laundry hanging evenly on the clothesline." title="2. Loading Your Laundry" reverse={true}>
                    <p className="mb-2">For best results, distribute the weight of wet laundry evenly across all five lines. Avoid placing all heavy items (like wet towels or jeans) on a single line.</p>
                    <p>Use clothespins to secure items, especially on windy days if the unit is installed outdoors. Our high-tensile polyester lines perform best with balanced loads.</p>
                 </StepWithImage>
 
-                <StepWithImage imageSrc="https://i.imgur.com/gB8sZzJ.jpeg" alt="Retracted clothesline unit looking sleek and compact against a wall." title="3. Retracting the Unit">
+                <StepWithImage imageSrc={IMAGES.step_three} alt="Retracted clothesline unit looking sleek and compact against a wall." title="3. Retracting the Unit">
                    <p className="mb-2">Remove all laundry and clothespins from the lines.</p>
                    <p className="mb-2">Unlock the tension knob by turning it counter-clockwise. Then, carefully unhook the central bar from the mounting hooks. <strong>Do not let go of the bar.</strong></p>
                    <p>Slowly and steadily guide the bar back towards the main housing. The internal mechanism will retract the lines smoothly and safely.</p>
