@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 
 export enum ReviewStatus {
   Pending = 'Pending',
-  Approved = 'Approved',
+  Accepted = 'Accepted',
   Rejected = 'Rejected'
 }
 

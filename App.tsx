@@ -88,7 +88,7 @@ function App() {
           const formattedData = dataArray.map((item: any) => ({
             ...item,
             id: item._id || item.id, // Handle MongoDB _id
-            name: item.customerName || item.name, // Map customerName to name for frontend compatibility
+            customerName: item.customerName || item.name, // Ensure customerName is populated
             status: item.status || ReviewStatus.PENDING
           }));
           console.log('Formatted Reviews State:', formattedData);
@@ -173,6 +173,8 @@ function App() {
 
       if (response.ok) {
         console.log('Review status updated successfully');
+        // Local Optimistic Update (Option B: Update local array state)
+        // This will automatically move the item to the correct tab in AdminPage
         setReviews(prevReviews =>
           prevReviews.map(review =>
             review.id === reviewId ? { ...review, status } : review

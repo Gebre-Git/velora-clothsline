@@ -25,7 +25,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
 
   // Filter reviews by status (case-insensitive)
   const pendingReviews = reviews.filter(r => r.status.toLowerCase() === 'pending');
-  const acceptedReviews = reviews.filter(r => r.status.toLowerCase() === 'approved' || r.status.toLowerCase() === 'accepted');
+  const acceptedReviews = reviews.filter(r => r.status.toLowerCase() === 'accepted');
   const rejectedReviews = reviews.filter(r => r.status.toLowerCase() === 'rejected');
 
   // Get current orders based on active tab

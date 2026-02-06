@@ -6,26 +6,25 @@ interface ReviewFormProps {
 }
 
 const StarRating: React.FC<{ rating: number; onRatingChange: (rating: number) => void }> = ({ rating, onRatingChange }) => {
-    const [hoverRating, setHoverRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
 
-    return (
-        <div className="flex items-center space-x-1" onMouseLeave={() => setHoverRating(0)}>
-            {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                    type="button"
-                    key={star}
-                    className={`text-3xl transition-colors ${
-                        (hoverRating || rating) >= star ? 'text-yellow-400' : 'text-gray-300'
-                    }`}
-                    onClick={() => onRatingChange(star)}
-                    onMouseEnter={() => setHoverRating(star)}
-                    aria-label={`Rate ${star} out of 5 stars`}
-                >
-                    ★
-                </button>
-            ))}
-        </div>
-    );
+  return (
+    <div className="flex items-center space-x-1" onMouseLeave={() => setHoverRating(0)}>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          type="button"
+          key={star}
+          className={`text-3xl transition-colors ${(hoverRating || rating) >= star ? 'text-yellow-400' : 'text-gray-300'
+            }`}
+          onClick={() => onRatingChange(star)}
+          onMouseEnter={() => setHoverRating(star)}
+          aria-label={`Rate ${star} out of 5 stars`}
+        >
+          ★
+        </button>
+      ))}
+    </div>
+  );
 };
 
 const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
@@ -42,8 +41,8 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
       return;
     }
     setError('');
-    onSubmit({ name, rating, comment });
-    
+    onSubmit({ customerName: name, rating, comment });
+
     // Reset form and show success message
     setName('');
     setRating(0);
@@ -56,8 +55,8 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
     <div className="bg-white p-8 rounded-lg shadow-lg">
       {submitted ? (
         <div className="text-center p-4 bg-green-100 text-green-800 rounded-md">
-            <p className="font-semibold">Thank you!</p>
-            <p>Your review has been submitted and is pending approval.</p>
+          <p className="font-semibold">Thank you!</p>
+          <p>Your review has been submitted and is pending approval.</p>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">

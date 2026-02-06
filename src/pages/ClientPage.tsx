@@ -119,7 +119,7 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          customerName: reviewData.name,
+          customerName: reviewData.customerName,
           rating: reviewData.rating,
           comment: reviewData.comment
         })
@@ -166,7 +166,8 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews
     );
   };
 
-  const approvedReviews = reviews.filter(review => review.status === ReviewStatus.APPROVED);
+  // Filter only approved reviews for display
+  const approvedReviews = reviews.filter(review => review.status === ReviewStatus.ACCEPTED);
 
   return (
     <>
