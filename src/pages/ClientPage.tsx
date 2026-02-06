@@ -4,6 +4,7 @@ import ReviewForm from '../../components/ReviewForm';
 import ReviewCard from '../../components/ReviewCard';
 import { type Order, OrderStatus, type Review, ReviewStatus } from '../../types';
 import { IMAGES } from '../constants/images';
+import heroImage from '../assets/heroImage.png';
 
 interface ClientPageProps {
   addOrder: (orderData: Omit<Order, 'id' | 'status' | 'userEmail' | 'createdAt'>) => string;
@@ -172,7 +173,7 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews
   return (
     <>
       {/* Hero Section */}
-      <div className="relative h-[70vh] md:h-[90vh] bg-cover bg-center text-white flex items-center" style={{ backgroundImage: "url('https://i.imgur.com/8xLqT98.jpeg')" }}>
+      <div className="relative mt-0 min-h-[110vh] bg-cover bg-center text-white flex items-center justify-center" style={{ backgroundImage: `url(${heroImage})` }}>
         <div className="absolute inset-0 bg-velora-dark bg-opacity-60"></div>
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight opacity-0 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>

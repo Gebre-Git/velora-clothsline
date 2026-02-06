@@ -7,7 +7,7 @@ const uri = "mongodb+srv://gebre2024mail_db_user:cxXGxyNdNdxeD5ms@velora.8xujaw0
 console.log("--- Manual Connection Test ---");
 console.log("Attempting to connect to: velora.8xujaw0.mongodb.net");
 
-mongoose.connect(uri)
+mongoose.connect(uri, { family: 4 })
     .then(() => {
         console.log("⭐⭐⭐⭐⭐ SUCCESS! ⭐⭐⭐⭐⭐");
         console.log("The connection string is PERFECT.");

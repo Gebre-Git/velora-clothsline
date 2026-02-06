@@ -1,39 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-
 const Header: React.FC<{ isAdmin?: boolean; onLogout?: () => void }> = ({ isAdmin = false, onLogout }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const activeLinkStyle = {
-    color: '#005d5a',
-    fontWeight: '600',
+    fontWeight: '700',
+    color: isScrolled ? '#005d5a' : '#ffffff', // Teal when scrolled, White when top
   };
 
+  const linkClass = `transition-colors duration-300 ${isScrolled ? 'text-gray-600 hover:text-velora-green' : 'text-white/90 hover:text-white'
+    }`;
+
+  // Custom 'E' component using 3 bars
+  const StylizedE = () => (
+    <div className="inline-flex flex-col justify-between h-[0.7em] w-[0.6em] mx-[1px] translate-y-[0.05em]">
+      <span className="w-full h-[0.16em] bg-current rounded-sm"></span>
+      <span className="w-full h-[0.16em] bg-current rounded-sm"></span>
+      <span className="w-full h-[0.16em] bg-current rounded-sm"></span>
+    </div>
+  );
+
   return (
-    <header className="sticky top-0 z-50 bg-velora-white/80 backdrop-blur-lg shadow-sm">
+    <header
+      className={`fixed w-full top-0 z-50 transition-all duration-300 ${isScrolled
+          ? 'bg-velora-white/95 backdrop-blur-md shadow-sm py-2'
+          : 'bg-transparent py-4'
+        }`}
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <NavLink to="/" className="flex items-center space-x-3 text-3xl font-extrabold text-velora-dark">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-velora-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 22h16"/>
-                <path d="M6 22V4h12v18"/>
-                <path d="M9 4V2h6v2"/>
-                <path d="M6 8h12"/>
-                <path d="M6 12h12"/>
-                <path d="M6 16h12"/>
-            </svg>
-            <span>VELORA™</span>
+        <div className="flex items-center justify-between transition-all duration-300">
+          <NavLink to="/" className="flex items-center space-x-3 group">
+            <span className={`flex items-center text-4xl font-extrabold tracking-tight transition-colors duration-300 ${isScrolled ? 'text-[#005d5a]' : 'text-white'}`}>
+              V<StylizedE />LORA<sup className="text-sm ml-1 top-0 opacity-80">TM</sup>
+            </span>
           </NavLink>
-          <nav className="flex items-center space-x-6 text-lg font-medium text-gray-600">
+          <nav className="flex items-center space-x-8 text-lg font-medium">
             <NavLink
               to="/"
               style={({ isActive }) => isActive ? activeLinkStyle : undefined}
-              className="hover:text-velora-green transition-colors duration-200"
+              className={linkClass}
             >
               Home
             </NavLink>
             <NavLink
               to="/guidelines"
               style={({ isActive }) => isActive ? activeLinkStyle : undefined}
-              className="hover:text-velora-green transition-colors duration-200"
+              className={linkClass}
             >
               Guidelines
             </NavLink>
@@ -41,13 +62,18 @@ const Header: React.FC<{ isAdmin?: boolean; onLogout?: () => void }> = ({ isAdmi
               <NavLink
                 to="/admin"
                 style={({ isActive }) => isActive ? activeLinkStyle : undefined}
-                className="hover:text-velora-green transition-colors duration-200"
+                className={linkClass}
               >
                 Admin Panel
               </NavLink>
             )}
             {isAdmin && onLogout && (
-              <button onClick={onLogout} className="text-sm text-red-600 hover:underline">Logout</button>
+              <button
+                onClick={onLogout}
+                className={`text-sm hover:underline ${isScrolled ? 'text-red-600' : 'text-red-300'}`}
+              >
+                Logout
+              </button>
             )}
           </nav>
         </div>

@@ -7,7 +7,7 @@ export async function connectDB() {
     process.exit(1);
   }
   try {
-    await mongoose.connect(uri);
+    await mongoose.connect(uri, { family: 4 });
     console.log('✅ MongoDB Connected');
   } catch (err) {
     console.error('MongoDB connection error:', err);
