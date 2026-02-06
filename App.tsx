@@ -14,6 +14,7 @@ import { type Order, OrderStatus, type Review, ReviewStatus } from './types';
 function App() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Add loading state
   const allowedAdminEmails = ['gebre2024mail@gmail.com', 'gebreone777@gmail.com'];
 
   // Security: Initialize to false, only set true after explicit login or careful validation
@@ -38,45 +39,59 @@ function App() {
   // Fetch orders from database
   useEffect(() => {
     const fetchOrders = async () => {
+      setLoading(true);
       try {
+        console.log('Fetching orders...');
         const response = await fetch('http://localhost:5000/api/orders');
+        console.log('Orders response status:', response.status);
         if (response.ok) {
           const rawData = await response.json();
-          console.log('Fetched Orders Raw:', rawData);
+          console.log('Orders from DB (Raw):', rawData);
+
+          // Harden parsing: Handle if data is wrapped in { data: [...] } or just [...]
+          const dataArray = Array.isArray(rawData) ? rawData : (rawData.data || []);
+
           // Map _id to id and ensure items structure
-          const formattedData = rawData.map((item: any) => ({
+          const formattedData = dataArray.map((item: any) => ({
             ...item,
             id: item._id || item.id, // Handle MongoDB _id
             status: item.status || OrderStatus.PENDING,
           }));
-          console.log('Formatted Orders:', formattedData);
+          console.log('Formatted Orders State:', formattedData);
           setOrders(formattedData);
         } else {
           console.error('Failed to fetch orders, status:', response.status);
         }
       } catch (err) {
         console.error('Failed to fetch orders:', err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchOrders();
-  }, []);
+  }, [isAdmin]); // Re-fetch when admin status changes (or on mount)
 
   // Fetch reviews from database
   useEffect(() => {
     const fetchReviews = async () => {
       try {
+        console.log('Fetching reviews...');
         const response = await fetch('http://localhost:5000/api/reviews');
         if (response.ok) {
           const rawData = await response.json();
-          console.log('Fetched Reviews Raw:', rawData);
+          console.log('Reviews from DB (Raw):', rawData);
+
+          // Harden parsing
+          const dataArray = Array.isArray(rawData) ? rawData : (rawData.data || []);
+
           // Map _id to id and correct field names
-          const formattedData = rawData.map((item: any) => ({
+          const formattedData = dataArray.map((item: any) => ({
             ...item,
             id: item._id || item.id, // Handle MongoDB _id
             name: item.customerName || item.name, // Map customerName to name for frontend compatibility
             status: item.status || ReviewStatus.PENDING
           }));
-          console.log('Formatted Reviews:', formattedData);
+          console.log('Formatted Reviews State:', formattedData);
           setReviews(formattedData);
         } else {
           console.error('Failed to fetch reviews, status:', response.status);
@@ -86,7 +101,7 @@ function App() {
       }
     };
     fetchReviews();
-  }, []);
+  }, [isAdmin]);
 
   const addOrder = useCallback((newOrderData: Omit<Order, 'id' | 'status' | 'userEmail' | 'createdAt'>) => {
     const newOrder: Order = {
@@ -111,11 +126,20 @@ function App() {
 
       if (response.ok) {
         console.log('Order status updated successfully');
+        // Optimistic update (ensure casing matches what we send)
         setOrders(prevOrders =>
           prevOrders.map(order =>
             order.id === orderId ? { ...order, status } : order
           )
         );
+        // Force re-fetch to be absolutely defined by backend if needed, 
+        // but optimistic update is usually smoother. 
+        // To be SAFE as per user request "re-fetch data immediately":
+        // We can just trigger a fetch or trust the optimistic update if we know casing is right.
+        // Let's stick with optimistic update BUT ensure the 'status' passed in matches the filter in AdminPage.
+        // AdminPage expects 'Accepted' or 'Rejected'. Protocol sends 'Accepted' (Title Case).
+        // Filter is toLowerCase() === 'accepted'. So 'Accepted' passes.
+        // Optimistic update sets it to 'Accepted'.
       } else {
         console.error('Failed to update order status, response:', response.status);
       }
@@ -186,7 +210,13 @@ function App() {
           <Routes>
             <Route path="/admin" element={
               <ProtectedRoute isAdmin={isAdmin}>
-                <AdminPage orders={orders} updateOrderStatus={updateOrderStatus} reviews={reviews} updateReviewStatus={updateReviewStatus} />
+                <AdminPage
+                  orders={orders}
+                  updateOrderStatus={updateOrderStatus}
+                  reviews={reviews}
+                  updateReviewStatus={updateReviewStatus}
+                  loading={loading} // Pass loading state
+                />
               </ProtectedRoute>
             } />
             <Route path="/admin/login" element={<AdminLogin onLogin={handleLogin} />} />

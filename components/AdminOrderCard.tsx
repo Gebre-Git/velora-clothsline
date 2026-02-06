@@ -47,22 +47,24 @@ const AdminOrderCard: React.FC<AdminOrderCardProps> = ({ order, onUpdateStatus }
             <p className="font-semibold text-velora-text">{order.phoneNumber}</p>
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-500">Items</p>
+            <p className="text-sm font-medium text-gray-500 mb-1">Items</p>
             {(order as any).items && (order as any).items.length > 0 ? (
-              <div className="font-semibold text-velora-text">
+              <div className="text-velora-text">
                 {(order as any).items.map((item: any, index: number) => (
-                  <p key={index}>{item.quantity} x {item.color}</p>
+                  <p key={index} className="text-lg font-bold">
+                    <span className="text-velora-green">{item.quantity}</span> x {item.color}
+                  </p>
                 ))}
               </div>
             ) : (
-              <p className="font-semibold text-velora-text">
-                {order.quantity} x {order.color} Unit(s)
+              <p className="text-lg font-bold text-velora-text">
+                <span className="text-velora-green">{order.quantity}</span> x {order.color} Unit(s)
               </p>
             )}
           </div>
         </div>
 
-        {order.status === OrderStatus.PENDING && (
+        {order.status.toLowerCase() === 'pending' && (
           <div className="flex justify-end space-x-3 mt-6 border-t border-gray-200 pt-4">
             <button
               onClick={() => onUpdateStatus(order.id, OrderStatus.REJECTED)}

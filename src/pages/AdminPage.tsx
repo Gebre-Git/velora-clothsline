@@ -8,24 +8,25 @@ interface AdminPageProps {
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
   reviews: Review[];
   updateReviewStatus: (reviewId: string, status: ReviewStatus) => void;
+  loading?: boolean;
 }
 
 type OrderTab = 'pending' | 'accepted' | 'rejected';
 type ReviewTab = 'pending' | 'accepted' | 'rejected';
 
-const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, reviews, updateReviewStatus }) => {
+const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, reviews, updateReviewStatus, loading }) => {
   const [activeOrderTab, setActiveOrderTab] = useState<OrderTab>('pending');
   const [activeReviewTab, setActiveReviewTab] = useState<ReviewTab>('pending');
 
-  // Filter orders by status
-  const pendingOrders = orders.filter(o => o.status === OrderStatus.PENDING);
-  const acceptedOrders = orders.filter(o => o.status === OrderStatus.CONFIRMED);
-  const rejectedOrders = orders.filter(o => o.status === OrderStatus.REJECTED);
+  // Filter orders by status (case-insensitive)
+  const pendingOrders = orders.filter(o => o.status.toLowerCase() === 'pending');
+  const acceptedOrders = orders.filter(o => o.status.toLowerCase() === 'accepted'); // Matches "Accepted" or "accepted"
+  const rejectedOrders = orders.filter(o => o.status.toLowerCase() === 'rejected');
 
-  // Filter reviews by status
-  const pendingReviews = reviews.filter(r => r.status === ReviewStatus.PENDING);
-  const acceptedReviews = reviews.filter(r => r.status === ReviewStatus.APPROVED);
-  const rejectedReviews = reviews.filter(r => r.status === ReviewStatus.REJECTED);
+  // Filter reviews by status (case-insensitive)
+  const pendingReviews = reviews.filter(r => r.status.toLowerCase() === 'pending');
+  const acceptedReviews = reviews.filter(r => r.status.toLowerCase() === 'approved' || r.status.toLowerCase() === 'accepted');
+  const rejectedReviews = reviews.filter(r => r.status.toLowerCase() === 'rejected');
 
   // Get current orders based on active tab
   const getCurrentOrders = () => {
@@ -48,6 +49,15 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
   const currentOrders = getCurrentOrders();
   const currentReviews = getCurrentReviews();
 
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-velora-light">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-velora-green mb-4"></div>
+        <h2 className="text-xl font-semibold text-velora-dark">Fetching from Database...</h2>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-velora-light min-h-screen py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -64,8 +74,8 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
             <button
               onClick={() => setActiveOrderTab('pending')}
               className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeOrderTab === 'pending'
-                  ? 'bg-white text-velora-dark shadow-md'
-                  : 'text-gray-600 hover:text-velora-dark'
+                ? 'bg-white text-velora-dark shadow-md'
+                : 'text-gray-600 hover:text-velora-dark'
                 }`}
             >
               Pending ({pendingOrders.length})
@@ -73,8 +83,8 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
             <button
               onClick={() => setActiveOrderTab('accepted')}
               className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeOrderTab === 'accepted'
-                  ? 'bg-white text-velora-dark shadow-md'
-                  : 'text-gray-600 hover:text-velora-dark'
+                ? 'bg-white text-velora-dark shadow-md'
+                : 'text-gray-600 hover:text-velora-dark'
                 }`}
             >
               Accepted ({acceptedOrders.length})
@@ -82,8 +92,8 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
             <button
               onClick={() => setActiveOrderTab('rejected')}
               className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeOrderTab === 'rejected'
-                  ? 'bg-white text-velora-dark shadow-md'
-                  : 'text-gray-600 hover:text-velora-dark'
+                ? 'bg-white text-velora-dark shadow-md'
+                : 'text-gray-600 hover:text-velora-dark'
                 }`}
             >
               Rejected ({rejectedOrders.length})
@@ -121,8 +131,8 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
             <button
               onClick={() => setActiveReviewTab('pending')}
               className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeReviewTab === 'pending'
-                  ? 'bg-white text-velora-dark shadow-md'
-                  : 'text-gray-600 hover:text-velora-dark'
+                ? 'bg-white text-velora-dark shadow-md'
+                : 'text-gray-600 hover:text-velora-dark'
                 }`}
             >
               Pending ({pendingReviews.length})
@@ -130,8 +140,8 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
             <button
               onClick={() => setActiveReviewTab('accepted')}
               className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeReviewTab === 'accepted'
-                  ? 'bg-white text-velora-dark shadow-md'
-                  : 'text-gray-600 hover:text-velora-dark'
+                ? 'bg-white text-velora-dark shadow-md'
+                : 'text-gray-600 hover:text-velora-dark'
                 }`}
             >
               Accepted ({acceptedReviews.length})
@@ -139,8 +149,8 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
             <button
               onClick={() => setActiveReviewTab('rejected')}
               className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeReviewTab === 'rejected'
-                  ? 'bg-white text-velora-dark shadow-md'
-                  : 'text-gray-600 hover:text-velora-dark'
+                ? 'bg-white text-velora-dark shadow-md'
+                : 'text-gray-600 hover:text-velora-dark'
                 }`}
             >
               Rejected ({rejectedReviews.length})
