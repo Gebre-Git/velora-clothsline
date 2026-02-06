@@ -11,18 +11,22 @@ export enum ReviewStatus {
 }
 
 export interface Order {
-  id: string;
+  id: string; // Will be mapped from _id
+  _id?: string;
   quantity: number;
   phoneNumber: string;
   color: string;
   userEmail: string;
   status: OrderStatus;
+  items?: Array<{ color: string; quantity: number }>;
+  total?: number;
   createdAt: Date;
 }
 
 export interface Review {
   id: string;
-  name: string;
+  _id?: string;
+  customerName: string; // Changed from name to match backend
   rating: number;
   comment: string;
   status: ReviewStatus;

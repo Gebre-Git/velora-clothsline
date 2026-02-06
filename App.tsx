@@ -16,15 +16,24 @@ function App() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const allowedAdminEmails = ['gebre2024mail@gmail.com', 'gebreone777@gmail.com'];
 
-  const [isAdmin, setIsAdmin] = useState<boolean>(() => {
-    try {
-      const token = localStorage.getItem('velora_admin_token');
-      const email = localStorage.getItem('velora_admin_email');
-      return token !== null && email !== null && allowedAdminEmails.includes(email);
-    } catch {
-      return false;
+  // Security: Initialize to false, only set true after explicit login or careful validation
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
+  // Optional: Check token validity on mount, but default is false
+  useEffect(() => {
+    const token = localStorage.getItem('velora_admin_token');
+    const email = localStorage.getItem('velora_admin_email');
+    if (token && email && allowedAdminEmails.includes(email)) {
+      // Ideally verify token with backend here. For now, trusting localStorage if present 
+      // BUT user asked to "Only set it to true if the password check passes". 
+      // To strictly follow that, we might NOT set it here. 
+      // However, to keep it usable, we check if we are on the admin path? 
+      // User said: "On the User Page (http://localhost:3000/), ensure the Admin state is NOT active."
+      // So we will NOT auto-set isAdmin on mount unless we verify it properly.
+      // Let's keep it false by default. User must login.
+      setIsAdmin(false);
     }
-  });
+  }, []);
 
   // Fetch orders from database
   useEffect(() => {
@@ -32,8 +41,18 @@ function App() {
       try {
         const response = await fetch('http://localhost:5000/api/orders');
         if (response.ok) {
-          const data = await response.json();
-          setOrders(data);
+          const rawData = await response.json();
+          console.log('Fetched Orders Raw:', rawData);
+          // Map _id to id and ensure items structure
+          const formattedData = rawData.map((item: any) => ({
+            ...item,
+            id: item._id || item.id, // Handle MongoDB _id
+            status: item.status || OrderStatus.PENDING,
+          }));
+          console.log('Formatted Orders:', formattedData);
+          setOrders(formattedData);
+        } else {
+          console.error('Failed to fetch orders, status:', response.status);
         }
       } catch (err) {
         console.error('Failed to fetch orders:', err);
@@ -48,8 +67,19 @@ function App() {
       try {
         const response = await fetch('http://localhost:5000/api/reviews');
         if (response.ok) {
-          const data = await response.json();
-          setReviews(data);
+          const rawData = await response.json();
+          console.log('Fetched Reviews Raw:', rawData);
+          // Map _id to id and correct field names
+          const formattedData = rawData.map((item: any) => ({
+            ...item,
+            id: item._id || item.id, // Handle MongoDB _id
+            name: item.customerName || item.name, // Map customerName to name for frontend compatibility
+            status: item.status || ReviewStatus.PENDING
+          }));
+          console.log('Formatted Reviews:', formattedData);
+          setReviews(formattedData);
+        } else {
+          console.error('Failed to fetch reviews, status:', response.status);
         }
       } catch (err) {
         console.error('Failed to fetch reviews:', err);
@@ -71,6 +101,7 @@ function App() {
   }, []);
 
   const updateOrderStatus = useCallback(async (orderId: string, status: OrderStatus) => {
+    console.log('Updating order status:', orderId, 'to', status);
     try {
       const response = await fetch(`http://localhost:5000/api/orders/${orderId}/status`, {
         method: 'PATCH',
@@ -79,11 +110,14 @@ function App() {
       });
 
       if (response.ok) {
+        console.log('Order status updated successfully');
         setOrders(prevOrders =>
           prevOrders.map(order =>
             order.id === orderId ? { ...order, status } : order
           )
         );
+      } else {
+        console.error('Failed to update order status, response:', response.status);
       }
     } catch (err) {
       console.error('Failed to update order status:', err);
@@ -105,6 +139,7 @@ function App() {
   }, []);
 
   const updateReviewStatus = useCallback(async (reviewId: string, status: ReviewStatus) => {
+    console.log('Updating review status:', reviewId, 'to', status);
     try {
       const response = await fetch(`http://localhost:5000/api/reviews/${reviewId}/status`, {
         method: 'PATCH',
@@ -113,11 +148,14 @@ function App() {
       });
 
       if (response.ok) {
+        console.log('Review status updated successfully');
         setReviews(prevReviews =>
           prevReviews.map(review =>
             review.id === reviewId ? { ...review, status } : review
           )
         );
+      } else {
+        console.error('Failed to update review status, response:', response.status);
       }
     } catch (err) {
       console.error('Failed to update review status:', err);
