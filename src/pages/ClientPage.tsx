@@ -203,7 +203,7 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews
           <SectionTitle>The Ultimate Space-Saving Solution</SectionTitle>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="opacity-0" data-animation="animate-slide-in-left">
-              <img src={IMAGES.Ulitimate_use} alt="VELORA Retractable Clothesline in use" className="rounded-2xl shadow-2xl w-full" />
+              <img src={IMAGES.Ulitimate_use} alt="VELORA Retractable Clothesline in use" className="w-full" />
             </div>
             <div className="space-y-8">
               <Feature icon={<CheckIcon />} title="Generous Drying Space" animation="animate-slide-in-right" delay="0s">Our models offer up to 20 meters of line length, perfect for families of any size.</Feature>
@@ -226,7 +226,7 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews
               <Feature icon={<CheckIcon />} title="Eco-Friendly Choice" animation="animate-slide-in-left" delay="0.6s">Air-dry your clothes to save energy, reduce your carbon footprint, and be gentler on your fabrics.</Feature>
             </div>
             <div className="opacity-0" data-animation="animate-slide-in-right">
-              <img src={IMAGES.Upgrade_space} alt="VELORA retracted and blending in" className="rounded-2xl shadow-2xl w-full" />
+              <img src={IMAGES.Upgrade_space} alt="VELORA retracted and blending in" className="w-full" />
             </div>
           </div>
         </div>
