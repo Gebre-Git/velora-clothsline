@@ -10,7 +10,7 @@ const getStatusBadgeClasses = (status: OrderStatus) => {
   switch (status) {
     case OrderStatus.PENDING:
       return 'bg-yellow-100 text-yellow-800';
-    case OrderStatus.CONFIRMED:
+    case OrderStatus.ACCEPTED:
       return 'bg-green-100 text-green-800';
     case OrderStatus.REJECTED:
       return 'bg-red-100 text-red-800';
@@ -73,7 +73,7 @@ const AdminOrderCard: React.FC<AdminOrderCardProps> = ({ order, onUpdateStatus }
               Reject
             </button>
             <button
-              onClick={() => onUpdateStatus(order.id, OrderStatus.CONFIRMED)}
+              onClick={() => onUpdateStatus(order.id, OrderStatus.ACCEPTED)}
               className="px-4 py-2 text-sm font-semibold bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors"
             >
               Accept

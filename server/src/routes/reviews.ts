@@ -23,13 +23,21 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.patch('/:id/status', async (req, res) => {
+// Update status
+router.patch('/:id', async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
-  if (!Object.values(ReviewStatus).includes(status)) return res.status(400).json({ message: 'Invalid status' });
-  const review = await Review.findByIdAndUpdate(id, { status }, { new: true });
-  if (!review) return res.status(404).json({ message: 'Review not found' });
-  res.json(review);
+
+  // Basic validation
+  if (!status) return res.status(400).json({ message: 'Status is required' });
+
+  try {
+    const review = await Review.findByIdAndUpdate(id, { status }, { new: true });
+    if (!review) return res.status(404).json({ message: 'Review not found' });
+    res.json(review);
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating review status' });
+  }
 });
 
 export default router;

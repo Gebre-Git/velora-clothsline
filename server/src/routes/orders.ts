@@ -24,13 +24,16 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.patch('/:id/status', async (req, res) => {
+
+router.patch('/:id', async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
+  console.log('Received Status:', status); // Debug log
   if (!Object.values(OrderStatus).includes(status)) return res.status(400).json({ message: 'Invalid status' });
   const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
   if (!order) return res.status(404).json({ message: 'Order not found' });
   res.json(order);
 });
+
 
 export default router;

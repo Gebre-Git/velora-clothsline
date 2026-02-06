@@ -118,7 +118,7 @@ function App() {
   const updateOrderStatus = useCallback(async (orderId: string, status: OrderStatus) => {
     console.log('Updating order status:', orderId, 'to', status);
     try {
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}/status`, {
+      const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
@@ -126,20 +126,31 @@ function App() {
 
       if (response.ok) {
         console.log('Order status updated successfully');
-        // Optimistic update (ensure casing matches what we send)
+        // Optimistic update
         setOrders(prevOrders =>
           prevOrders.map(order =>
             order.id === orderId ? { ...order, status } : order
           )
         );
-        // Force re-fetch to be absolutely defined by backend if needed, 
-        // but optimistic update is usually smoother. 
-        // To be SAFE as per user request "re-fetch data immediately":
-        // We can just trigger a fetch or trust the optimistic update if we know casing is right.
-        // Let's stick with optimistic update BUT ensure the 'status' passed in matches the filter in AdminPage.
-        // AdminPage expects 'Accepted' or 'Rejected'. Protocol sends 'Accepted' (Title Case).
-        // Filter is toLowerCase() === 'accepted'. So 'Accepted' passes.
-        // Optimistic update sets it to 'Accepted'.
+
+        // Explicitly re-fetch to ensure sync with backend and trigger UI refresh
+        // We use the same logic as the initial fetch
+        try {
+          const fetchResponse = await fetch('http://localhost:5000/api/orders');
+          if (fetchResponse.ok) {
+            const rawData = await fetchResponse.json();
+            const dataArray = Array.isArray(rawData) ? rawData : (rawData.data || []);
+            const formattedData = dataArray.map((item: any) => ({
+              ...item,
+              id: item._id || item.id,
+              status: item.status || OrderStatus.PENDING,
+            }));
+            setOrders(formattedData);
+          }
+        } catch (fetchErr) {
+          console.error('Failed to re-fetch orders after update:', fetchErr);
+        }
+
       } else {
         console.error('Failed to update order status, response:', response.status);
       }
@@ -165,7 +176,7 @@ function App() {
   const updateReviewStatus = useCallback(async (reviewId: string, status: ReviewStatus) => {
     console.log('Updating review status:', reviewId, 'to', status);
     try {
-      const response = await fetch(`http://localhost:5000/api/reviews/${reviewId}/status`, {
+      const response = await fetch(`http://localhost:5000/api/reviews/${reviewId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })

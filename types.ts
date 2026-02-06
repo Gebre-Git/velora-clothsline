@@ -1,7 +1,7 @@
 export enum OrderStatus {
-  PENDING = 'PENDING',
-  CONFIRMED = 'CONFIRMED',
-  REJECTED = 'REJECTED',
+  PENDING = 'Pending',
+  ACCEPTED = 'Accepted',
+  REJECTED = 'Rejected',
 }
 
 export enum ReviewStatus {
