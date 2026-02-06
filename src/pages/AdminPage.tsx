@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AdminOrderCard from '../../components/AdminOrderCard';
 import AdminReviewCard from '../../components/AdminReviewCard';
 import { type Order, OrderStatus, type Review, ReviewStatus } from '../../types';
@@ -10,7 +10,44 @@ interface AdminPageProps {
   updateReviewStatus: (reviewId: string, status: ReviewStatus) => void;
 }
 
+type OrderTab = 'pending' | 'accepted' | 'rejected';
+type ReviewTab = 'pending' | 'accepted' | 'rejected';
+
 const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, reviews, updateReviewStatus }) => {
+  const [activeOrderTab, setActiveOrderTab] = useState<OrderTab>('pending');
+  const [activeReviewTab, setActiveReviewTab] = useState<ReviewTab>('pending');
+
+  // Filter orders by status
+  const pendingOrders = orders.filter(o => o.status === OrderStatus.PENDING);
+  const acceptedOrders = orders.filter(o => o.status === OrderStatus.CONFIRMED);
+  const rejectedOrders = orders.filter(o => o.status === OrderStatus.REJECTED);
+
+  // Filter reviews by status
+  const pendingReviews = reviews.filter(r => r.status === ReviewStatus.PENDING);
+  const acceptedReviews = reviews.filter(r => r.status === ReviewStatus.APPROVED);
+  const rejectedReviews = reviews.filter(r => r.status === ReviewStatus.REJECTED);
+
+  // Get current orders based on active tab
+  const getCurrentOrders = () => {
+    switch (activeOrderTab) {
+      case 'pending': return pendingOrders;
+      case 'accepted': return acceptedOrders;
+      case 'rejected': return rejectedOrders;
+    }
+  };
+
+  // Get current reviews based on active tab
+  const getCurrentReviews = () => {
+    switch (activeReviewTab) {
+      case 'pending': return pendingReviews;
+      case 'accepted': return acceptedReviews;
+      case 'rejected': return rejectedReviews;
+    }
+  };
+
+  const currentOrders = getCurrentOrders();
+  const currentReviews = getCurrentReviews();
+
   return (
     <div className="bg-velora-light min-h-screen py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,45 +55,119 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
           <h1 className="text-4xl font-extrabold text-velora-dark">Admin Dashboard</h1>
           <p className="mt-2 text-lg text-gray-500">Manage incoming customer orders and reviews for VELORA™.</p>
         </div>
-        
+
         <section className="mb-16">
-            <h2 className="text-3xl font-bold text-velora-dark mb-6 border-l-4 border-velora-green pl-4">Order Management</h2>
-            {orders.length > 0 ? (
-              <div className="space-y-6">
-                {orders.map(order => (
-                  <AdminOrderCard
-                    key={order.id}
-                    order={order}
-                    onUpdateStatus={updateOrderStatus}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center bg-velora-white p-10 rounded-lg shadow">
-                <h2 className="text-2xl font-semibold text-gray-700">No Orders Yet</h2>
-                <p className="mt-2 text-gray-500">New orders from customers will appear here.</p>
-              </div>
-            )}
+          <h2 className="text-3xl font-bold text-velora-dark mb-6 border-l-4 border-velora-green pl-4">Order Management</h2>
+
+          {/* Order Tabs */}
+          <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg">
+            <button
+              onClick={() => setActiveOrderTab('pending')}
+              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeOrderTab === 'pending'
+                  ? 'bg-white text-velora-dark shadow-md'
+                  : 'text-gray-600 hover:text-velora-dark'
+                }`}
+            >
+              Pending ({pendingOrders.length})
+            </button>
+            <button
+              onClick={() => setActiveOrderTab('accepted')}
+              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeOrderTab === 'accepted'
+                  ? 'bg-white text-velora-dark shadow-md'
+                  : 'text-gray-600 hover:text-velora-dark'
+                }`}
+            >
+              Accepted ({acceptedOrders.length})
+            </button>
+            <button
+              onClick={() => setActiveOrderTab('rejected')}
+              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeOrderTab === 'rejected'
+                  ? 'bg-white text-velora-dark shadow-md'
+                  : 'text-gray-600 hover:text-velora-dark'
+                }`}
+            >
+              Rejected ({rejectedOrders.length})
+            </button>
+          </div>
+
+          {/* Order Content */}
+          {currentOrders.length > 0 ? (
+            <div className="space-y-6">
+              {currentOrders.map(order => (
+                <AdminOrderCard
+                  key={order.id}
+                  order={order}
+                  onUpdateStatus={updateOrderStatus}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center bg-velora-white p-10 rounded-lg shadow">
+              <h2 className="text-2xl font-semibold text-gray-700">No {activeOrderTab} Orders</h2>
+              <p className="mt-2 text-gray-500">
+                {activeOrderTab === 'pending' && 'New orders from customers will appear here.'}
+                {activeOrderTab === 'accepted' && 'Accepted orders will appear here.'}
+                {activeOrderTab === 'rejected' && 'Rejected orders will appear here.'}
+              </p>
+            </div>
+          )}
         </section>
 
         <section>
-            <h2 className="text-3xl font-bold text-velora-dark mb-6 border-l-4 border-velora-green pl-4">Review Management</h2>
-            {reviews.length > 0 ? (
-              <div className="space-y-6">
-                {reviews.map(review => (
-                  <AdminReviewCard
-                    key={review.id}
-                    review={review}
-                    onUpdateStatus={updateReviewStatus}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center bg-velora-white p-10 rounded-lg shadow">
-                <h2 className="text-2xl font-semibold text-gray-700">No Reviews Yet</h2>
-                <p className="mt-2 text-gray-500">New reviews from customers will appear here.</p>
-              </div>
-            )}
+          <h2 className="text-3xl font-bold text-velora-dark mb-6 border-l-4 border-velora-green pl-4">Review Management</h2>
+
+          {/* Review Tabs */}
+          <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg">
+            <button
+              onClick={() => setActiveReviewTab('pending')}
+              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeReviewTab === 'pending'
+                  ? 'bg-white text-velora-dark shadow-md'
+                  : 'text-gray-600 hover:text-velora-dark'
+                }`}
+            >
+              Pending ({pendingReviews.length})
+            </button>
+            <button
+              onClick={() => setActiveReviewTab('accepted')}
+              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeReviewTab === 'accepted'
+                  ? 'bg-white text-velora-dark shadow-md'
+                  : 'text-gray-600 hover:text-velora-dark'
+                }`}
+            >
+              Accepted ({acceptedReviews.length})
+            </button>
+            <button
+              onClick={() => setActiveReviewTab('rejected')}
+              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeReviewTab === 'rejected'
+                  ? 'bg-white text-velora-dark shadow-md'
+                  : 'text-gray-600 hover:text-velora-dark'
+                }`}
+            >
+              Rejected ({rejectedReviews.length})
+            </button>
+          </div>
+
+          {/* Review Content */}
+          {currentReviews.length > 0 ? (
+            <div className="space-y-6">
+              {currentReviews.map(review => (
+                <AdminReviewCard
+                  key={review.id}
+                  review={review}
+                  onUpdateStatus={updateReviewStatus}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center bg-velora-white p-10 rounded-lg shadow">
+              <h2 className="text-2xl font-semibold text-gray-700">No {activeReviewTab} Reviews</h2>
+              <p className="mt-2 text-gray-500">
+                {activeReviewTab === 'pending' && 'New reviews from customers will appear here.'}
+                {activeReviewTab === 'accepted' && 'Accepted reviews will appear here.'}
+                {activeReviewTab === 'rejected' && 'Rejected reviews will appear here.'}
+              </p>
+            </div>
+          )}
         </section>
       </div>
     </div>

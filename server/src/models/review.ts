@@ -8,9 +8,9 @@ export enum ReviewStatus {
 
 const ReviewSchema = new Schema(
   {
-    author: { type: String, required: true },
-    content: { type: String, required: true },
-    rating: { type: Number, default: 5 },
+    customerName: { type: String, required: true },
+    comment: { type: String, required: true },
+    rating: { type: Number, required: true, min: 1, max: 5, default: 5 },
     status: { type: String, enum: Object.values(ReviewStatus), default: ReviewStatus.Pending }
   },
   { timestamps: true }

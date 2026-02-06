@@ -17,7 +17,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, onSubmit }) =>
   const [error, setError] = useState('');
 
   if (!isOpen) return null;
-  
+
   const handleSubmitOrder = async (e: FormEvent) => {
     e.preventDefault();
     if (!phoneNumber.match(/^[0-9-+\s()]*$/) || phoneNumber.length < 7) {
@@ -30,6 +30,9 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, onSubmit }) =>
     }
     setError('');
 
+    const PRICE_PER_UNIT = 1500; // Product price in your currency
+    const total = quantity * PRICE_PER_UNIT;
+
     const payload = {
       customerName: name,
       email,
@@ -41,6 +44,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, onSubmit }) =>
           quantity,
         },
       ],
+      total,
     };
 
     try {

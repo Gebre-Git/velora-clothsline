@@ -9,10 +9,18 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { author, content, rating } = req.body;
-  const r = new Review({ author, content, rating });
-  await r.save();
-  res.status(201).json(r);
+  const { customerName, comment, rating } = req.body;
+  if (!customerName || !comment || !rating) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+  try {
+    const r = new Review({ customerName, comment, rating });
+    await r.save();
+    res.status(201).json(r);
+  } catch (err) {
+    console.error('Error saving review:', err);
+    res.status(500).json({ message: 'Failed to save review' });
+  }
 });
 
 router.patch('/:id/status', async (req, res) => {

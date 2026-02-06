@@ -10,60 +10,53 @@ import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import { type Order, OrderStatus, type Review, ReviewStatus } from './types';
 
-// Mock initial data for demonstration
-const initialOrders: Order[] = [
-  {
-    id: 'ord-1689374',
-    quantity: 1,
-    phoneNumber: '555-0101',
-    color: 'White',
-    userEmail: 'jane.doe@example.com',
-    status: OrderStatus.PENDING,
-    createdAt: new Date(Date.now() - 1000 * 60 * 5),
-  },
-  {
-    id: 'ord-9438210',
-    quantity: 2,
-    phoneNumber: '555-0102',
-    color: 'Classic Cream',
-    userEmail: 'john.smith@example.com',
-    status: OrderStatus.CONFIRMED,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
-  },
-];
-
-const initialReviews: Review[] = [
-    {
-        id: 'rev-1',
-        name: 'Alex Johnson',
-        rating: 5,
-        comment: 'This is the best clothesline I have ever owned. The retractable feature is a lifesaver for my small balcony. Super sturdy and looks great!',
-        status: ReviewStatus.APPROVED,
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
-    },
-    {
-        id: 'rev-2',
-        name: 'Maria Garcia',
-        rating: 4,
-        comment: 'Great product! Installation was straightforward. My only wish is that it came in more colors. Otherwise, it works perfectly.',
-        status: ReviewStatus.APPROVED,
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
-    }
-]
 
 function App() {
-  const [orders, setOrders] = useState<Order[]>(initialOrders);
-  const [reviews, setReviews] = useState<Review[]>(initialReviews);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const allowedAdminEmails = ['gebre2024mail@gmail.com', 'gebreone777@gmail.com'];
 
   const [isAdmin, setIsAdmin] = useState<boolean>(() => {
     try {
+      const token = localStorage.getItem('velora_admin_token');
       const email = localStorage.getItem('velora_admin_email');
-      return email !== null && allowedAdminEmails.includes(email);
+      return token !== null && email !== null && allowedAdminEmails.includes(email);
     } catch {
       return false;
     }
   });
+
+  // Fetch orders from database
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/orders');
+        if (response.ok) {
+          const data = await response.json();
+          setOrders(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch orders:', err);
+      }
+    };
+    fetchOrders();
+  }, []);
+
+  // Fetch reviews from database
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/reviews');
+        if (response.ok) {
+          const data = await response.json();
+          setReviews(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch reviews:', err);
+      }
+    };
+    fetchReviews();
+  }, []);
 
   const addOrder = useCallback((newOrderData: Omit<Order, 'id' | 'status' | 'userEmail' | 'createdAt'>) => {
     const newOrder: Order = {
@@ -77,46 +70,70 @@ function App() {
     return newOrder.id;
   }, []);
 
-  const updateOrderStatus = useCallback((orderId: string, status: OrderStatus) => {
-    setOrders(prevOrders =>
-      prevOrders.map(order =>
-        order.id === orderId ? { ...order, status } : order
-      )
-    );
+  const updateOrderStatus = useCallback(async (orderId: string, status: OrderStatus) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/orders/${orderId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+
+      if (response.ok) {
+        setOrders(prevOrders =>
+          prevOrders.map(order =>
+            order.id === orderId ? { ...order, status } : order
+          )
+        );
+      }
+    } catch (err) {
+      console.error('Failed to update order status:', err);
+    }
   }, []);
-  
+
   const getOrderById = useCallback((orderId: string): Order | undefined => {
     return orders.find(order => order.id === orderId);
   }, [orders]);
 
   const addReview = useCallback((newReviewData: Omit<Review, 'id' | 'createdAt' | 'status'>) => {
     const newReview: Review = {
-        ...newReviewData,
-        id: `rev-${Math.random().toString(36).substr(2, 7)}`,
-        status: ReviewStatus.PENDING,
-        createdAt: new Date(),
+      ...newReviewData,
+      id: `rev-${Math.random().toString(36).substr(2, 7)}`,
+      status: ReviewStatus.PENDING,
+      createdAt: new Date(),
     };
     setReviews(prevReviews => [newReview, ...prevReviews]);
   }, []);
-  
-  const updateReviewStatus = useCallback((reviewId: string, status: ReviewStatus) => {
-    setReviews(prevReviews =>
-      prevReviews.map(review =>
-        review.id === reviewId ? { ...review, status } : review
-      )
-    );
+
+  const updateReviewStatus = useCallback(async (reviewId: string, status: ReviewStatus) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/reviews/${reviewId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+
+      if (response.ok) {
+        setReviews(prevReviews =>
+          prevReviews.map(review =>
+            review.id === reviewId ? { ...review, status } : review
+          )
+        );
+      }
+    } catch (err) {
+      console.error('Failed to update review status:', err);
+    }
   }, []);
 
-  const handleLogin = useCallback((email: string) => {
+  const handleLogin = useCallback((token: string, email: string) => {
     if (allowedAdminEmails.includes(email)) {
+      localStorage.setItem('velora_admin_token', token);
       localStorage.setItem('velora_admin_email', email);
       setIsAdmin(true);
-      return true;
     }
-    return false;
   }, []);
 
   const handleLogout = useCallback(() => {
+    localStorage.removeItem('velora_admin_token');
     localStorage.removeItem('velora_admin_email');
     setIsAdmin(false);
   }, []);

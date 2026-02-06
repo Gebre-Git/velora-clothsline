@@ -1,19 +1,37 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const AdminLogin: React.FC<{ onLogin: (email: string) => boolean }> = ({ onLogin }) => {
+const AdminLogin: React.FC<{ onLogin: (token: string, email: string) => void }> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const ok = onLogin(email.trim());
-    if (ok) {
+    setError(null);
+    setLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), password })
+      });
+
+      if (!response.ok) {
+        setError('Invalid email or password');
+        setLoading(false);
+        return;
+      }
+
+      const data = await response.json();
+      onLogin(data.token, data.email);
       navigate('/admin');
-    } else {
-      setError('Unauthorized email or invalid credentials.');
+    } catch (err) {
+      setError('Failed to connect to server. Make sure the backend is running.');
+      setLoading(false);
     }
   };
 
@@ -29,7 +47,9 @@ const AdminLogin: React.FC<{ onLogin: (email: string) => boolean }> = ({ onLogin
           <label className="block mb-2 text-sm font-medium">Password</label>
           <input value={password} onChange={(e) => setPassword(e.target.value)} className="w-full mb-4 p-2 border rounded" type="password" required />
 
-          <button type="submit" className="w-full bg-velora-green text-white py-2 rounded font-semibold">Sign in</button>
+          <button type="submit" disabled={loading} className="w-full bg-velora-green text-white py-2 rounded font-semibold disabled:opacity-50">
+            {loading ? 'Signing in...' : 'Sign in'}
+          </button>
         </form>
         <p className="text-sm text-gray-500 mt-3">Only authorized admin emails are allowed for testing.</p>
       </div>

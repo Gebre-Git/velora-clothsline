@@ -2,10 +2,8 @@ import { Schema, model } from 'mongoose';
 
 export enum OrderStatus {
   Pending = 'Pending',
-  Processing = 'Processing',
-  Shipped = 'Shipped',
-  Completed = 'Completed',
-  Cancelled = 'Cancelled'
+  Accepted = 'Accepted',
+  Rejected = 'Rejected'
 }
 
 const OrderSchema = new Schema(
