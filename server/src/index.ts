@@ -17,6 +17,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.json({ message: 'Velora API is live', version: '1.0.0' });
+});
+
 app.use('/api/orders', ordersRouter);
 app.use('/api/reviews', reviewsRouter);
 app.use('/api/auth', authRouter);
