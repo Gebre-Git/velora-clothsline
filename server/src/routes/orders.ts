@@ -11,8 +11,13 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   console.log('New Order Received:', req.body);
   const { customerName, email, address, phoneNumber, items } = req.body;
-  if (!customerName || !email || !address || !phoneNumber || !items) {
+  if (!customerName || !phoneNumber || !items) {
     return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  const totalQuantity = items.reduce((sum: number, item: any) => sum + (item.quantity || 0), 0);
+  if (totalQuantity < 5) {
+    return res.status(400).json({ message: 'Minimum order quantity is 5.' });
   }
   try {
     const o = new Order(req.body);

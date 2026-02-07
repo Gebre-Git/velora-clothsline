@@ -9,8 +9,8 @@ export enum OrderStatus {
 const OrderSchema = new Schema(
   {
     customerName: { type: String, required: true },
-    email: { type: String, required: true },
-    address: { type: String, required: true },
+    email: { type: String, required: false },
+    address: { type: String, required: false },
     phoneNumber: { type: String, required: true },
     items: { type: Array, default: [] },
     total: { type: Number, default: 0 },
