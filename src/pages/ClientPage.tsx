@@ -111,7 +111,7 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews
     const newId = addOrder(orderData);
     setSubmittedOrderId(newId);
     setOrderStatus(OrderStatus.PENDING);
-    setIsModalOpen(false);
+    // setIsModalOpen(false); // Removed to allow OrderModal to show success message and close itself
   };
 
   const handleReviewSubmit = async (reviewData: Omit<Review, 'id' | 'createdAt' | 'status'>) => {
@@ -147,7 +147,7 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews
         title = 'Order Received!';
         message = 'Your order is pending confirmation. We will review it shortly.';
         break;
-      case OrderStatus.CONFIRMED:
+      case OrderStatus.ACCEPTED:
         bgColor = 'bg-green-100 border-green-500 text-green-800';
         title = 'Order Confirmed!';
         message = 'Great news! Your order has been confirmed. We will call you soon to arrange delivery.';

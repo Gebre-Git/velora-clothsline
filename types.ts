@@ -16,7 +16,9 @@ export interface Order {
   quantity: number;
   phoneNumber: string;
   color: string;
-  userEmail: string;
+  customerName: string;
+  userEmail?: string;
+  address?: string;
   status: OrderStatus;
   items?: Array<{ color: string; quantity: number }>;
   total?: number;

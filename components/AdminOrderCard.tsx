@@ -40,7 +40,7 @@ const AdminOrderCard: React.FC<AdminOrderCardProps> = ({ order, onUpdateStatus }
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-gray-200 pt-4">
           <div>
             <p className="text-sm font-medium text-gray-500">Customer</p>
-            <p className="font-semibold text-velora-text">{order.userEmail}</p>
+            <p className="font-semibold text-velora-text">{order.customerName}</p>
           </div>
           <div>
             <p className="text-sm font-medium text-gray-500">Phone</p>
