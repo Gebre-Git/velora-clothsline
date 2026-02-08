@@ -70,10 +70,10 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
           <h2 className="text-3xl font-bold text-velora-dark mb-6 border-l-4 border-velora-green pl-4">Order Management</h2>
 
           {/* Order Tabs */}
-          <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg">
+          <div className="flex flex-wrap gap-2 mb-6 bg-gray-100 p-2 rounded-lg">
             <button
               onClick={() => setActiveOrderTab('pending')}
-              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeOrderTab === 'pending'
+              className={`flex-1 min-w-[120px] py-3 px-4 rounded-md font-semibold transition-all text-sm sm:text-base ${activeOrderTab === 'pending'
                 ? 'bg-white text-velora-dark shadow-md'
                 : 'text-gray-600 hover:text-velora-dark'
                 }`}
@@ -82,7 +82,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
             </button>
             <button
               onClick={() => setActiveOrderTab('accepted')}
-              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeOrderTab === 'accepted'
+              className={`flex-1 min-w-[120px] py-3 px-4 rounded-md font-semibold transition-all text-sm sm:text-base ${activeOrderTab === 'accepted'
                 ? 'bg-white text-velora-dark shadow-md'
                 : 'text-gray-600 hover:text-velora-dark'
                 }`}
@@ -91,7 +91,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
             </button>
             <button
               onClick={() => setActiveOrderTab('rejected')}
-              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeOrderTab === 'rejected'
+              className={`flex-1 min-w-[120px] py-3 px-4 rounded-md font-semibold transition-all text-sm sm:text-base ${activeOrderTab === 'rejected'
                 ? 'bg-white text-velora-dark shadow-md'
                 : 'text-gray-600 hover:text-velora-dark'
                 }`}
@@ -127,10 +127,10 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
           <h2 className="text-3xl font-bold text-velora-dark mb-6 border-l-4 border-velora-green pl-4">Review Management</h2>
 
           {/* Review Tabs */}
-          <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg">
+          <div className="flex flex-wrap gap-2 mb-6 bg-gray-100 p-2 rounded-lg">
             <button
               onClick={() => setActiveReviewTab('pending')}
-              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeReviewTab === 'pending'
+              className={`flex-1 min-w-[120px] py-3 px-4 rounded-md font-semibold transition-all text-sm sm:text-base ${activeReviewTab === 'pending'
                 ? 'bg-white text-velora-dark shadow-md'
                 : 'text-gray-600 hover:text-velora-dark'
                 }`}
@@ -139,7 +139,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
             </button>
             <button
               onClick={() => setActiveReviewTab('accepted')}
-              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeReviewTab === 'accepted'
+              className={`flex-1 min-w-[120px] py-3 px-4 rounded-md font-semibold transition-all text-sm sm:text-base ${activeReviewTab === 'accepted'
                 ? 'bg-white text-velora-dark shadow-md'
                 : 'text-gray-600 hover:text-velora-dark'
                 }`}
@@ -148,7 +148,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
             </button>
             <button
               onClick={() => setActiveReviewTab('rejected')}
-              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-all ${activeReviewTab === 'rejected'
+              className={`flex-1 min-w-[120px] py-3 px-4 rounded-md font-semibold transition-all text-sm sm:text-base ${activeReviewTab === 'rejected'
                 ? 'bg-white text-velora-dark shadow-md'
                 : 'text-gray-600 hover:text-velora-dark'
                 }`}

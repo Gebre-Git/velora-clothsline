@@ -287,14 +287,16 @@ const ClientPage: React.FC<ClientPageProps> = ({ addOrder, getOrderById, reviews
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionTitle>Technical Specifications</SectionTitle>
           <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden opacity-0" data-animation="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            <div className="divide-y divide-gray-200">
-              <div className="grid grid-cols-3 gap-4 px-6 py-4"><span className="font-semibold text-gray-500">Feature</span><span className="col-span-2 font-medium text-velora-dark">Specification</span></div>
-              <div className="grid grid-cols-3 gap-4 px-6 py-4 bg-gray-50"><span className="font-semibold text-gray-500">Dimensions (Retracted)</span><span className="col-span-2 text-velora-text">29.4 x 6.3 x 6 cm</span></div>
-              <div className="grid grid-cols-3 gap-4 px-6 py-4"><span className="font-semibold text-gray-500">Total Line Length</span><span className="col-span-2 text-velora-text">20 Meters (4m x 5 lines)</span></div>
-              <div className="grid grid-cols-3 gap-4 px-6 py-4 bg-gray-50"><span className="font-semibold text-gray-500">Maximum Load Capacity</span><span className="col-span-2 text-velora-text">25 kg</span></div>
-              <div className="grid grid-cols-3 gap-4 px-6 py-4"><span className="font-semibold text-gray-500">Casing Material</span><span className="col-span-2 text-velora-text">High-Impact Steel Alloy</span></div>
-              <div className="grid grid-cols-3 gap-4 px-6 py-4 bg-gray-50"><span className="font-semibold text-gray-500">Line Material</span><span className="col-span-2 text-velora-text">High-Tensile Polyester</span></div>
-              <div className="grid grid-cols-3 gap-4 px-6 py-4"><span className="font-semibold text-gray-500">Available Colors</span><span className="col-span-2 text-velora-text">White, Classic Cream, Woodland Gray</span></div>
+            <div className="overflow-x-auto">
+              <div className="divide-y divide-gray-200 min-w-[500px]">
+                <div className="grid grid-cols-3 gap-4 px-4 sm:px-6 py-4"><span className="font-semibold text-gray-500 text-sm sm:text-base">Feature</span><span className="col-span-2 font-medium text-velora-dark text-sm sm:text-base">Specification</span></div>
+                <div className="grid grid-cols-3 gap-4 px-4 sm:px-6 py-4 bg-gray-50"><span className="font-semibold text-gray-500 text-sm sm:text-base">Dimensions (Retracted)</span><span className="col-span-2 text-velora-text text-sm sm:text-base">29.4 x 6.3 x 6 cm</span></div>
+                <div className="grid grid-cols-3 gap-4 px-4 sm:px-6 py-4"><span className="font-semibold text-gray-500 text-sm sm:text-base">Total Line Length</span><span className="col-span-2 text-velora-text text-sm sm:text-base">20 Meters (4m x 5 lines)</span></div>
+                <div className="grid grid-cols-3 gap-4 px-4 sm:px-6 py-4 bg-gray-50"><span className="font-semibold text-gray-500 text-sm sm:text-base">Maximum Load Capacity</span><span className="col-span-2 text-velora-text text-sm sm:text-base">25 kg</span></div>
+                <div className="grid grid-cols-3 gap-4 px-4 sm:px-6 py-4"><span className="font-semibold text-gray-500 text-sm sm:text-base">Casing Material</span><span className="col-span-2 text-velora-text text-sm sm:text-base">High-Impact Steel Alloy</span></div>
+                <div className="grid grid-cols-3 gap-4 px-4 sm:px-6 py-4 bg-gray-50"><span className="font-semibold text-gray-500 text-sm sm:text-base">Line Material</span><span className="col-span-2 text-velora-text text-sm sm:text-base">High-Tensile Polyester</span></div>
+                <div className="grid grid-cols-3 gap-4 px-4 sm:px-6 py-4"><span className="font-semibold text-gray-500 text-sm sm:text-base">Available Colors</span><span className="col-span-2 text-velora-text text-sm sm:text-base">White, Classic Cream, Woodland Gray</span></div>
+              </div>
             </div>
           </div>
         </div>
