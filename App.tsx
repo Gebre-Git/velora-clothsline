@@ -19,25 +19,51 @@ function App() {
 
   // Security: Initialize to false, only set true after explicit login or careful validation
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isAuthChecking, setIsAuthChecking] = useState<boolean>(true);
 
-  // Optional: Check token validity on mount, but default is false
+  // Check token validity on mount
+  // Check token validity on mount and sync with storage changes
   useEffect(() => {
-    const token = localStorage.getItem('velora_admin_token');
-    const email = localStorage.getItem('velora_admin_email');
-    if (token && email && allowedAdminEmails.includes(email)) {
-      // Ideally verify token with backend here. For now, trusting localStorage if present 
-      // BUT user asked to "Only set it to true if the password check passes". 
-      // To strictly follow that, we might NOT set it here. 
-      // However, to keep it usable, we check if we are on the admin path? 
-      // User said: "On the User Page (http://localhost:3000/), ensure the Admin state is NOT active."
-      // So we will NOT auto-set isAdmin on mount unless we verify it properly.
-      // Let's keep it false by default. User must login.
-      setIsAdmin(false);
-    }
+    const checkAuth = () => {
+      const token = localStorage.getItem('velora_admin_token');
+      const email = localStorage.getItem('velora_admin_email');
+
+      console.log('Auth Check (Mount/Storage):', { token: !!token, email });
+
+      // Trust the token if it exists (Backend verification happens on API calls)
+      if (token && email) {
+        console.log('Restoring admin session');
+        setIsAdmin(true);
+      } else {
+        console.log('No valid session found');
+        setIsAdmin(false);
+      }
+      setIsAuthChecking(false);
+    };
+
+    checkAuth();
+
+    // Listen for storage events (e.g. token deletion or login from another tab)
+    window.addEventListener('storage', checkAuth);
+
+    // Custom event for same-tab updates
+    window.addEventListener('local-storage-update', checkAuth);
+
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+      window.removeEventListener('local-storage-update', checkAuth);
+    };
   }, []);
 
   // Fetch orders from database
   useEffect(() => {
+    if (isAuthChecking) return; // Wait for auth check
+
+    // Only fetch if we are admin or if public needs it (though current logic fetches for everyone?)
+    // Actually existing implementation fetches orders regardless of admin status?
+    // Looking at lines 41-72 of original file, it depends on [isAdmin].
+    // If isAdmin changes, it refetches.
+
     const fetchOrders = async () => {
       setLoading(true);
       try {
@@ -69,7 +95,7 @@ function App() {
       }
     };
     fetchOrders();
-  }, [isAdmin]); // Re-fetch when admin status changes (or on mount)
+  }, [isAdmin, isAuthChecking]); // Re-fetch when admin status changes (or on mount)
 
   // Fetch reviews from database
   useEffect(() => {
@@ -200,19 +226,33 @@ function App() {
   }, []);
 
   const handleLogin = useCallback((token: string, email: string) => {
-    if (allowedAdminEmails.includes(email)) {
-      localStorage.setItem('velora_admin_token', token);
-      localStorage.setItem('velora_admin_email', email);
-      setIsAdmin(true);
-    }
+    // Redundant set (safe) + State update
+    localStorage.setItem('velora_admin_token', token);
+    localStorage.setItem('velora_admin_email', email);
+    setIsAdmin(true);
+
+    // Force storage event for listeners in other tabs/windows if needed, 
+    // or just to be thorough, but React state is the main driver here.
+    window.dispatchEvent(new Event('storage'));
   }, []);
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem('velora_admin_token');
     localStorage.removeItem('velora_admin_email');
     setIsAdmin(false);
+    window.dispatchEvent(new Event('storage')); // For other tabs
+    window.dispatchEvent(new Event('local-storage-update')); // For current tab
   }, []);
 
+
+
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen bg-velora-light flex items-center justify-center">
+        <div className="text-xl text-velora-text font-medium">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <HashRouter>

@@ -14,23 +14,36 @@ const AdminLogin: React.FC<{ onLogin: (token: string, email: string) => void }> 
     setLoading(true);
 
     try {
+      console.log('Attempting login with:', { email: email.trim(), password: '***' });
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.trim(), password })
       });
 
+      console.log('Response status:', response.status);
+
       if (!response.ok) {
-        setError('Invalid email or password');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Login failed:', errorData);
+        setError(errorData.message || 'Invalid email or password');
         setLoading(false);
         return;
       }
 
       const data = await response.json();
+      console.log('Login successful:', data);
+
+      // Explicitly save to localStorage here to ensure it's available 
+      // before navigation happens, fixing race conditions with ProtectedRoute
+      localStorage.setItem('velora_admin_token', data.token);
+      localStorage.setItem('velora_admin_email', data.email);
+
       onLogin(data.token, data.email);
       navigate('/admin');
     } catch (err) {
-      setError('Failed to connect to server. Make sure the backend is running.');
+      console.error('Network error details:', err);
+      setError('Failed to connect to server. Check console for details.');
       setLoading(false);
     }
   };

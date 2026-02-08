@@ -50,6 +50,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
   const currentReviews = getCurrentReviews();
 
   if (loading) {
+    console.log('AdminPage loading state active');
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-velora-light">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-velora-green mb-4"></div>
@@ -57,6 +58,13 @@ const AdminPage: React.FC<AdminPageProps> = ({ orders, updateOrderStatus, review
       </div>
     );
   }
+
+  console.log('AdminPage Rendering with:', {
+    ordersCount: orders.length,
+    reviewsCount: reviews.length,
+    activeOrderTab,
+    activeReviewTab
+  });
 
   return (
     <div className="bg-velora-light min-h-screen py-12">
