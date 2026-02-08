@@ -68,7 +68,7 @@ function App() {
       setLoading(true);
       try {
         console.log('Fetching orders...');
-        const response = await fetch('http://localhost:5000/api/orders');
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/orders`);
         console.log('Orders response status:', response.status);
         if (response.ok) {
           const rawData = await response.json();
@@ -102,7 +102,7 @@ function App() {
     const fetchReviews = async () => {
       try {
         console.log('Fetching reviews...');
-        const response = await fetch('http://localhost:5000/api/reviews');
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/reviews`);
         if (response.ok) {
           const rawData = await response.json();
           console.log('Reviews from DB (Raw):', rawData);
@@ -144,7 +144,7 @@ function App() {
   const updateOrderStatus = useCallback(async (orderId: string, status: OrderStatus) => {
     console.log('Updating order status:', orderId, 'to', status);
     try {
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/orders/${orderId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
@@ -162,7 +162,7 @@ function App() {
         // Explicitly re-fetch to ensure sync with backend and trigger UI refresh
         // We use the same logic as the initial fetch
         try {
-          const fetchResponse = await fetch('http://localhost:5000/api/orders');
+          const fetchResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/orders`);
           if (fetchResponse.ok) {
             const rawData = await fetchResponse.json();
             const dataArray = Array.isArray(rawData) ? rawData : (rawData.data || []);
@@ -202,7 +202,7 @@ function App() {
   const updateReviewStatus = useCallback(async (reviewId: string, status: ReviewStatus) => {
     console.log('Updating review status:', reviewId, 'to', status);
     try {
-      const response = await fetch(`http://localhost:5000/api/reviews/${reviewId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/reviews/${reviewId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
